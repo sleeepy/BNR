@@ -25,6 +25,24 @@
         // All HypnosisViews start with a clear background color
         [self setBackgroundColor:[UIColor clearColor]];
         [self setCircleColor:[UIColor lightGrayColor]];
+        
+        // Create the new layer object
+        boxLayer = [[CALayer alloc] init];
+        
+        // Set size, position
+        [boxLayer setBounds:CGRectMake(0.0, 0.0, 85.0, 85.0)];
+        [boxLayer setPosition:CGPointMake(160.0, 100.0)];
+        
+        // Set color - make half-transparent red the background color for the layer
+        UIColor *reddish = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5];
+        
+        // Get a CGColor object with the same color values
+        CGColorRef cgReddish = [reddish CGColor];
+        [boxLayer setBackgroundColor:cgReddish];
+        
+        // Make it a sublayer to the view's layer
+        [self.layer addSublayer:boxLayer];
+        
     }
     return self;
 }
