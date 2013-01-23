@@ -40,11 +40,40 @@
         CGColorRef cgReddish = [reddish CGColor];
         [boxLayer setBackgroundColor:cgReddish];
         
+
+        // Create UIImage
+        UIImage *layerImage = [UIImage imageNamed:@"Hypno.png"];
+        
+        CGImageRef image = [layerImage CGImage];
+        
+        [boxLayer setContents:(__bridge id)image];
+        
+        [boxLayer setContentsRect:CGRectMake(-0.1, -0.1, 1.2, 1.2)];
+        
+        [boxLayer setContentsGravity:kCAGravityResizeAspect];
+        
         // Make it a sublayer to the view's layer
         [self.layer addSublayer:boxLayer];
         
     }
     return self;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *t = [touches anyObject];
+    CGPoint p = [t locationInView:self];
+    [boxLayer setPosition:p];
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *t = [touches anyObject];
+    CGPoint p = [t locationInView:self];
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    [boxLayer setPosition:p];
+    [CATransaction commit];
 }
 
 - (void)drawRect:(CGRect)dirtyRect
