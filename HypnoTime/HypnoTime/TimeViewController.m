@@ -7,6 +7,8 @@
 //
 
 #import "TimeViewController.h"
+#import <QuartzCore/QuartzCore.h>
+
 
 @implementation TimeViewController
 
@@ -39,6 +41,56 @@
     [formatter setTimeStyle:NSDateFormatterMediumStyle];
     
     timeLabel.text = [formatter stringFromDate:now];
+    
+    //[self spinTimeLabel];
+    [self bounceTimeLabel];
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    NSLog(@"%@ finished: %d", anim, flag);
+}
+
+- (void)bounceTimeLabel
+{
+    // Create an animation
+    CAKeyframeAnimation *bounce = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    
+    // Setup values to pass through
+    CATransform3D forward = CATransform3DMakeScale(1.3, 1.3, 1);
+    CATransform3D back = CATransform3DMakeScale(.7, .7, 1);
+    CATransform3D forward2 = CATransform3DMakeScale(1.2, 1.2, 1);
+    CATransform3D back2 = CATransform3DMakeScale(.9, .9, 1);
+    
+    [bounce setValues:[NSArray arrayWithObjects:
+                       [NSValue valueWithCATransform3D:CATransform3DIdentity],
+                       [NSValue valueWithCATransform3D:forward],
+                       [NSValue valueWithCATransform3D:back],
+                       [NSValue valueWithCATransform3D:forward2],
+                       [NSValue valueWithCATransform3D:back2],
+                       [NSValue valueWithCATransform3D:CATransform3DIdentity],
+                       nil]];
+    
+    [bounce setDuration:0.6];
+    
+    [timeLabel.layer addAnimation:bounce forKey:@"bounceAnimation"];
+    
+}
+
+- (void)spinTimeLabel
+{
+    // Create an animation object
+    CABasicAnimation *spin = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    [spin setDelegate:self];
+    [spin setToValue:[NSNumber numberWithFloat:2.0 * M_PI]];
+    [spin setDuration:1.0];
+    
+    // Set the timing function to ease in/out
+    CAMediaTimingFunction *tf = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    [spin setTimingFunction:tf];
+    
+    // Kick off the animation by adding it to the layer
+    [timeLabel.layer addAnimation:spin forKey:@"spinAnimation"];
 }
 
 /*
